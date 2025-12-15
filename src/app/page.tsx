@@ -10,36 +10,15 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const cursorRef = useRef<HTMLDivElement>(null);
-  const trailContainerRef = useRef<HTMLDivElement>(null);
   const [cursorHover, setCursorHover] = useState(false);
 
-  // Cursor with smooth trail effect
+  // Cursor
   useEffect(() => {
     const cursor = cursorRef.current;
-    const trailContainer = trailContainerRef.current;
-    if (!cursor || !trailContainer) return;
+    if (!cursor) return;
 
     let mouseX = 0, mouseY = 0;
     let cursorX = 0, cursorY = 0;
-    
-    // Trail system with multiple following dots
-    const trailDots: HTMLDivElement[] = [];
-    const trailLength = 12;
-    const trailPositions: { x: number; y: number }[] = [];
-    
-    // Create trail dots
-    for (let i = 0; i < trailLength; i++) {
-      const dot = document.createElement('div');
-      dot.className = styles.trailDot;
-      const scale = 1 - (i / trailLength) * 0.7;
-      const opacity = 0.5 - (i / trailLength) * 0.4;
-      dot.style.width = `${8 * scale}px`;
-      dot.style.height = `${8 * scale}px`;
-      dot.style.opacity = `${opacity}`;
-      trailContainer.appendChild(dot);
-      trailDots.push(dot);
-      trailPositions.push({ x: 0, y: 0 });
-    }
 
     const move = (e: MouseEvent) => {
       mouseX = e.clientX;
@@ -47,26 +26,10 @@ export default function Home() {
     };
 
     const animate = () => {
-      // Animate main cursor
       cursorX += (mouseX - cursorX) * 0.2;
       cursorY += (mouseY - cursorY) * 0.2;
       cursor.style.left = cursorX - 6 + 'px';
       cursor.style.top = cursorY - 6 + 'px';
-      
-      // Animate trail - each dot follows the one before it
-      for (let i = 0; i < trailLength; i++) {
-        const targetX = i === 0 ? cursorX : trailPositions[i - 1].x;
-        const targetY = i === 0 ? cursorY : trailPositions[i - 1].y;
-        const speed = 0.35 - (i * 0.015);
-        
-        trailPositions[i].x += (targetX - trailPositions[i].x) * speed;
-        trailPositions[i].y += (targetY - trailPositions[i].y) * speed;
-        
-        const dotSize = parseFloat(trailDots[i].style.width);
-        trailDots[i].style.left = `${trailPositions[i].x - dotSize / 2}px`;
-        trailDots[i].style.top = `${trailPositions[i].y - dotSize / 2}px`;
-      }
-      
       requestAnimationFrame(animate);
     };
 
@@ -79,10 +42,7 @@ export default function Home() {
       link.addEventListener('mouseleave', () => setCursorHover(false));
     });
 
-    return () => {
-      window.removeEventListener('mousemove', move);
-      trailDots.forEach(dot => dot.remove());
-    };
+    return () => window.removeEventListener('mousemove', move);
   }, []);
 
   // Scroll
@@ -182,9 +142,6 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      {/* Cursor Trail Container */}
-      <div ref={trailContainerRef} className={styles.trailContainer} />
-      
       {/* Cursor */}
       <div 
         ref={cursorRef} 
