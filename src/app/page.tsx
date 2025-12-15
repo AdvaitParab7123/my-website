@@ -10,19 +10,49 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const cursorRef = useRef<HTMLDivElement>(null);
+  const trailContainerRef = useRef<HTMLDivElement>(null);
   const [cursorHover, setCursorHover] = useState(false);
 
-  // Cursor
+  // Cursor with trail effect
   useEffect(() => {
     const cursor = cursorRef.current;
-    if (!cursor) return;
+    const trailContainer = trailContainerRef.current;
+    if (!cursor || !trailContainer) return;
 
     let mouseX = 0, mouseY = 0;
     let cursorX = 0, cursorY = 0;
+    let lastTrailX = 0, lastTrailY = 0;
+    const trailThreshold = 8; // Minimum distance to spawn a new trail dot
+
+    const createTrailDot = (x: number, y: number) => {
+      const dot = document.createElement('div');
+      dot.className = styles.trailDot;
+      dot.style.left = `${x - 4}px`;
+      dot.style.top = `${y - 4}px`;
+      trailContainer.appendChild(dot);
+
+      // Remove dot after animation completes
+      setTimeout(() => {
+        if (dot.parentNode) {
+          dot.parentNode.removeChild(dot);
+        }
+      }, 600);
+    };
 
     const move = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
+
+      // Create trail dots based on distance moved
+      const dx = mouseX - lastTrailX;
+      const dy = mouseY - lastTrailY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance > trailThreshold) {
+        createTrailDot(mouseX, mouseY);
+        lastTrailX = mouseX;
+        lastTrailY = mouseY;
+      }
     };
 
     const animate = () => {
@@ -139,6 +169,9 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
+      {/* Cursor Trail Container */}
+      <div ref={trailContainerRef} className={styles.trailContainer} />
+      
       {/* Cursor */}
       <div 
         ref={cursorRef} 
