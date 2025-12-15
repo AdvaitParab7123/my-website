@@ -1,0 +1,177 @@
+/* Desktop Styles (screens > 768px) */
+
+/* Header - Desktop */
+.header {
+  padding: 32px 0;
+}
+
+.headerScrolled {
+  padding: 20px 0;
+}
+
+.navLinks {
+  display: flex;
+  gap: 48px;
+}
+
+.menuBtn {
+  display: none;
+}
+
+/* Hero - Desktop */
+.hero {
+  padding: 120px 24px;
+}
+
+.heroTitle {
+  font-size: clamp(36px, 8vw, 72px);
+}
+
+.heroSub {
+  font-size: 18px;
+  max-width: 600px;
+}
+
+/* Blobs - Desktop */
+.blob1 {
+  width: 280px;
+  height: 280px;
+  top: 5%;
+  right: -5%;
+}
+
+.blob2 {
+  width: 220px;
+  height: 220px;
+  bottom: 10%;
+  left: -5%;
+}
+
+.blob3 {
+  width: 100px;
+  height: 100px;
+  bottom: 15%;
+  right: 15%;
+}
+
+/* About - Desktop */
+.about {
+  padding: 120px 0;
+}
+
+.aboutGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: center;
+}
+
+.aboutTitle {
+  font-size: 42px;
+}
+
+.aboutVisual {
+  height: 450px;
+}
+
+.stats {
+  display: flex;
+  gap: 48px;
+  flex-wrap: nowrap;
+}
+
+/* Services - Desktop */
+.services {
+  padding: 120px 0;
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.sectionTitle {
+  font-size: 42px;
+}
+
+/* Work - Desktop */
+.work {
+  padding: 120px 0;
+}
+
+.workGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+.otherGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* Experience - Desktop */
+.testimonial {
+  padding: 100px 0;
+}
+
+.testimonialContent {
+  max-width: 800px;
+}
+
+.expTitle {
+  font-size: 36px;
+}
+
+.achievementCard {
+  max-width: 700px;
+}
+
+/* Contact - Desktop */
+.contact {
+  padding: 120px 0;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 100px;
+}
+
+.contactTitle {
+  font-size: 56px;
+}
+
+/* Footer - Desktop */
+.footerContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+}
+
+.footerLinks {
+  display: flex;
+  gap: 28px;
+  flex-wrap: nowrap;
+}
+
+/* Tablet adjustments (768px - 1024px) */
+@media (max-width: 1024px) {
+  .aboutGrid, .contactGrid {
+    grid-template-columns: 1fr;
+    gap: 64px;
+  }
+  
+  .servicesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .otherGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

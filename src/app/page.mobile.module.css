@@ -1,0 +1,406 @@
+/* Mobile Styles (screens <= 768px) */
+
+/* Hide custom cursor on mobile/touch devices */
+.cursor {
+  display: none;
+}
+
+/* Header - Mobile */
+.header {
+  padding: 20px 0;
+}
+
+.headerScrolled {
+  padding: 16px 0;
+}
+
+.navLinks {
+  display: none;
+}
+
+.menuBtn {
+  display: block;
+}
+
+/* Hero - Mobile */
+.hero {
+  padding: 100px 20px 80px;
+  min-height: auto;
+}
+
+.heroContent {
+  max-width: 100%;
+}
+
+.heroTag {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+}
+
+.heroTitle {
+  font-size: clamp(28px, 8vw, 42px);
+  margin-bottom: 20px;
+}
+
+.heroSub {
+  font-size: 15px;
+  margin-bottom: 32px;
+  max-width: 100%;
+}
+
+.heroCtas {
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.heroCta, .heroCtaSecondary {
+  width: 100%;
+  max-width: 280px;
+  justify-content: center;
+  padding: 14px 24px;
+  font-size: 14px;
+}
+
+/* Blobs - Mobile (smaller and repositioned) */
+.blobs {
+  z-index: 1;
+}
+
+.blob1 {
+  width: 180px;
+  height: 180px;
+  top: 2%;
+  right: -15%;
+  opacity: 0.6;
+}
+
+.blob2 {
+  width: 140px;
+  height: 140px;
+  bottom: 5%;
+  left: -15%;
+  opacity: 0.5;
+}
+
+.blob3 {
+  width: 80px;
+  height: 80px;
+  bottom: 20%;
+  right: 5%;
+  opacity: 0.4;
+}
+
+/* Marquee - Mobile */
+.marquee {
+  padding: 20px 0;
+}
+
+.marqueeItem {
+  font-size: 18px;
+  padding: 0 16px;
+}
+
+/* About - Mobile */
+.about {
+  padding: 60px 0;
+}
+
+.aboutGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.label {
+  font-size: 11px;
+  margin-bottom: 16px;
+}
+
+.aboutTitle {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.aboutText {
+  font-size: 15px;
+}
+
+.aboutVisual {
+  height: 300px;
+  order: -1;
+}
+
+.stats {
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 32px;
+  padding-top: 32px;
+}
+
+.stat h3 {
+  font-size: 32px;
+}
+
+.stat p {
+  font-size: 12px;
+}
+
+/* Services - Mobile */
+.services {
+  padding: 60px 0;
+}
+
+.sectionHeader {
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  font-size: 28px;
+}
+
+.sectionSub {
+  font-size: 14px;
+}
+
+.servicesGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.serviceCard {
+  padding: 28px 24px;
+}
+
+.serviceIcon {
+  width: 44px;
+  height: 44px;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.serviceCard h3 {
+  font-size: 18px;
+}
+
+.serviceCard p {
+  font-size: 13px;
+}
+
+/* Work - Mobile */
+.work {
+  padding: 60px 0;
+}
+
+.workHeader {
+  margin-bottom: 32px;
+}
+
+.workGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.projectCard {
+  aspect-ratio: 16/12;
+}
+
+.projectInfo {
+  padding: 20px;
+}
+
+.projectCategory {
+  font-size: 10px;
+  padding: 3px 8px;
+}
+
+.projectTitle {
+  font-size: 20px;
+}
+
+.projectDesc {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.projectRole {
+  font-size: 11px;
+}
+
+.otherProjects {
+  margin-top: 48px;
+  padding-top: 40px;
+}
+
+.otherTitle {
+  font-size: 20px;
+  margin-bottom: 24px;
+}
+
+.otherGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.otherCard {
+  padding: 14px 16px;
+  font-size: 13px;
+}
+
+/* Experience - Mobile */
+.testimonial {
+  padding: 60px 0;
+}
+
+.testimonialContent {
+  max-width: 100%;
+  padding: 0 8px;
+}
+
+.expTitle {
+  font-size: 26px;
+}
+
+.expRole {
+  font-size: 15px;
+}
+
+.expDesc {
+  font-size: 14px;
+}
+
+.expPrev {
+  font-size: 13px;
+}
+
+.achievementCard {
+  margin: 32px auto 0;
+  padding: 20px;
+  max-width: 100%;
+}
+
+.achievementExpanded {
+  padding: 24px 20px;
+}
+
+.achievementBadge {
+  font-size: 10px;
+  padding: 5px 10px;
+  margin-bottom: 12px;
+}
+
+.achievementTitle {
+  font-size: 16px;
+  padding-right: 36px;
+}
+
+.achievementStats {
+  font-size: 12px;
+}
+
+.achievementSubtitle {
+  font-size: 12px;
+}
+
+.achievementToggle {
+  width: 28px;
+  height: 28px;
+  font-size: 20px;
+}
+
+.achievementDesc {
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.achievementBullets li {
+  font-size: 13px;
+  padding-left: 16px;
+  margin-bottom: 8px;
+}
+
+.achievementBullets li::before {
+  font-size: 6px;
+  top: 5px;
+}
+
+/* Contact - Mobile */
+.contact {
+  padding: 60px 0;
+}
+
+.contactGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.contactTitle {
+  font-size: 32px;
+}
+
+.contactText {
+  font-size: 14px;
+  max-width: 100%;
+}
+
+.contactLabel {
+  font-size: 18px;
+  margin-top: 28px;
+}
+
+.contactEmail {
+  font-size: 16px;
+}
+
+.contactInfo h4 {
+  font-size: 11px;
+}
+
+.contactInfo p {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.socials {
+  margin-top: 28px;
+  gap: 20px;
+}
+
+.socials a {
+  font-size: 13px;
+}
+
+/* Footer - Mobile */
+.footer {
+  padding: 24px 0;
+}
+
+.footerContent {
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+}
+
+.footerLogo {
+  font-size: 16px;
+}
+
+.footerText {
+  font-size: 12px;
+}
+
+.footerLinks {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.footerLinks a {
+  font-size: 12px;
+}
+
