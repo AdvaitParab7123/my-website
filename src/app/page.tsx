@@ -155,16 +155,16 @@ export default function Home() {
   // Success Story / Key Achievement
   const successStory = {
     id: 'ai-agents-league',
-    title: 'AI Agents League — From company-wide competition to a wildcard win',
-    summary: 'I co-led Netcore Cloud\'s AI Agents League with the Chief Product Officer to drive hands-on AI agent adoption. 80+ teams applied; 40+ teams built and presented projects in Round 1. ~12 teams were selected to demo in the finals in front of the Founder & Group CEO and senior leadership. The day before finals, the CPO (Kedar) asked me to enter as a wildcard and present one of my n8n projects—so I prepared overnight and presented the next day. 5 teams won across 5 categories, and my wildcard/team won in one category.',
+    title: 'AI Agents League — Drove an AI-first building culture at Netcore',
+    subtitle: 'Company-wide AI build league • Platforms explored • Leadership visibility',
+    description: 'Co-led Netcore Cloud\'s AI Agents League with the Chief Product Officer to move teams from "AI curiosity" to "AI builders." The initiative created an AI-first culture where teams actively shipped prototypes using no-code automation (n8n, Make.com, Zapier) and developer-built AI agents/platforms—with direct visibility and buy-in from the Founder & Group CEO and senior leadership.',
     bullets: [
-      'Co-led AI Agents League with the Chief Product Officer to drive internal AI agent adoption',
-      '80+ teams applied; 40+ teams built and presented in Round 1 screening',
-      '~12 finalists presented demos to the Founder & Group CEO and senior leadership',
-      'Wildcard entry: presented my n8n project after overnight preparation (requested by CPO Kedar)',
-      'Won in 1 of 5 award categories',
+      'AI-first culture outcome: teams explored multiple AI building paths—no-code workflows (n8n/Make/Zapier) and coded agents/platforms built by developers',
+      'Participation & execution: 80+ teams applied, 40+ teams built and presented working projects in Round 1',
+      'Leadership alignment: ~12 finalists demoed solutions to the Founder & Group CEO + senior leadership',
+      'Personal contribution: entered as a last-minute wildcard (requested by CPO Kedar), prepped an n8n project overnight, and presented in the finals',
+      'Recognition: won in 1 of 5 award categories',
     ],
-    stats: '80+ applied • 40+ built • ~12 finalists • wildcard win',
   };
 
   return (
@@ -363,8 +363,9 @@ export default function Home() {
             <div className={styles.achievementHeader}>
               <span className={styles.achievementBadge}>🏆 Key Achievement</span>
               <h4 className={styles.achievementTitle}>{successStory.title}</h4>
-              <p className={styles.achievementStats}>{successStory.stats}</p>
+              <p className={styles.achievementSubtitle}>{successStory.subtitle}</p>
             </div>
+            <p className={styles.achievementDesc}>{successStory.description}</p>
             <ul className={styles.achievementBullets}>
               {successStory.bullets.map((bullet, i) => (
                 <li key={i}>{bullet}</li>

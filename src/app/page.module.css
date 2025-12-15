@@ -699,11 +699,18 @@
   color: var(--black);
 }
 
-.achievementStats {
+.achievementSubtitle {
   font-size: 14px;
   font-weight: 500;
   opacity: 0.7;
   letter-spacing: 0.5px;
+}
+
+.achievementDesc {
+  font-size: 15px;
+  line-height: 1.7;
+  opacity: 0.9;
+  margin-bottom: 20px;
 }
 
 .achievementBullets {
