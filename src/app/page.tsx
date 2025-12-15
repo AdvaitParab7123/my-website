@@ -13,7 +13,7 @@ export default function Home() {
   const trailContainerRef = useRef<HTMLDivElement>(null);
   const [cursorHover, setCursorHover] = useState(false);
 
-  // Cursor with trail effect
+  // Cursor with smooth trail effect
   useEffect(() => {
     const cursor = cursorRef.current;
     const trailContainer = trailContainerRef.current;
@@ -21,45 +21,52 @@ export default function Home() {
 
     let mouseX = 0, mouseY = 0;
     let cursorX = 0, cursorY = 0;
-    let lastTrailX = 0, lastTrailY = 0;
-    const trailThreshold = 8; // Minimum distance to spawn a new trail dot
-
-    const createTrailDot = (x: number, y: number) => {
+    
+    // Trail system with multiple following dots
+    const trailDots: HTMLDivElement[] = [];
+    const trailLength = 12;
+    const trailPositions: { x: number; y: number }[] = [];
+    
+    // Create trail dots
+    for (let i = 0; i < trailLength; i++) {
       const dot = document.createElement('div');
       dot.className = styles.trailDot;
-      dot.style.left = `${x - 4}px`;
-      dot.style.top = `${y - 4}px`;
+      const scale = 1 - (i / trailLength) * 0.7;
+      const opacity = 0.5 - (i / trailLength) * 0.4;
+      dot.style.width = `${8 * scale}px`;
+      dot.style.height = `${8 * scale}px`;
+      dot.style.opacity = `${opacity}`;
       trailContainer.appendChild(dot);
-
-      // Remove dot after animation completes
-      setTimeout(() => {
-        if (dot.parentNode) {
-          dot.parentNode.removeChild(dot);
-        }
-      }, 600);
-    };
+      trailDots.push(dot);
+      trailPositions.push({ x: 0, y: 0 });
+    }
 
     const move = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-
-      // Create trail dots based on distance moved
-      const dx = mouseX - lastTrailX;
-      const dy = mouseY - lastTrailY;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      if (distance > trailThreshold) {
-        createTrailDot(mouseX, mouseY);
-        lastTrailX = mouseX;
-        lastTrailY = mouseY;
-      }
     };
 
     const animate = () => {
+      // Animate main cursor
       cursorX += (mouseX - cursorX) * 0.2;
       cursorY += (mouseY - cursorY) * 0.2;
       cursor.style.left = cursorX - 6 + 'px';
       cursor.style.top = cursorY - 6 + 'px';
+      
+      // Animate trail - each dot follows the one before it
+      for (let i = 0; i < trailLength; i++) {
+        const targetX = i === 0 ? cursorX : trailPositions[i - 1].x;
+        const targetY = i === 0 ? cursorY : trailPositions[i - 1].y;
+        const speed = 0.35 - (i * 0.015);
+        
+        trailPositions[i].x += (targetX - trailPositions[i].x) * speed;
+        trailPositions[i].y += (targetY - trailPositions[i].y) * speed;
+        
+        const dotSize = parseFloat(trailDots[i].style.width);
+        trailDots[i].style.left = `${trailPositions[i].x - dotSize / 2}px`;
+        trailDots[i].style.top = `${trailPositions[i].y - dotSize / 2}px`;
+      }
+      
       requestAnimationFrame(animate);
     };
 
@@ -72,7 +79,10 @@ export default function Home() {
       link.addEventListener('mouseleave', () => setCursorHover(false));
     });
 
-    return () => window.removeEventListener('mousemove', move);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      trailDots.forEach(dot => dot.remove());
+    };
   }, []);
 
   // Scroll
@@ -153,9 +163,12 @@ export default function Home() {
   const marqueeItems = ['AI Enablement', 'Product Building', 'Workflow Automation', 'LLM Systems', 'Adoption Programs', 'Outcome-First UX'];
 
   // Success Story / Key Achievement
+  const [achievementExpanded, setAchievementExpanded] = useState(false);
   const successStory = {
     id: 'ai-agents-league',
-    title: 'AI Agents League — Drove an AI-first building culture at Netcore',
+    collapsedTitle: 'AI Agents League — From company-wide competition to a wildcard win',
+    collapsedStats: '80+ applied • 40+ built • ~12 finalists • wildcard win',
+    expandedTitle: 'AI Agents League — Drove an AI-first building culture at Netcore',
     subtitle: 'Company-wide AI build league • Platforms explored • Leadership visibility',
     description: 'Co-led Netcore Cloud\'s AI Agents League with the Chief Product Officer to move teams from "AI curiosity" to "AI builders." The initiative created an AI-first culture where teams actively shipped prototypes using no-code automation (n8n, Make.com, Zapier) and developer-built AI agents/platforms—with direct visibility and buy-in from the Founder & Group CEO and senior leadership.',
     bullets: [
@@ -358,19 +371,36 @@ export default function Home() {
             <p className={styles.expPrev}>Previously: Sales Development Representative (Nov 2024 – Jan 2025)</p>
           </div>
 
-          {/* Key Achievement */}
-          <div id={successStory.id} className={styles.achievementCard} data-anim>
+          {/* Key Achievement - Collapsible */}
+          <div 
+            id={successStory.id} 
+            className={`${styles.achievementCard} ${achievementExpanded ? styles.achievementExpanded : ''}`} 
+            data-anim
+            onClick={() => setAchievementExpanded(!achievementExpanded)}
+          >
             <div className={styles.achievementHeader}>
               <span className={styles.achievementBadge}>🏆 Key Achievement</span>
-              <h4 className={styles.achievementTitle}>{successStory.title}</h4>
-              <p className={styles.achievementSubtitle}>{successStory.subtitle}</p>
+              <h4 className={styles.achievementTitle}>
+                {achievementExpanded ? successStory.expandedTitle : successStory.collapsedTitle}
+              </h4>
+              {!achievementExpanded && (
+                <p className={styles.achievementStats}>{successStory.collapsedStats}</p>
+              )}
+              {achievementExpanded && (
+                <p className={styles.achievementSubtitle}>{successStory.subtitle}</p>
+              )}
+              <span className={styles.achievementToggle}>{achievementExpanded ? '−' : '+'}</span>
             </div>
-            <p className={styles.achievementDesc}>{successStory.description}</p>
-            <ul className={styles.achievementBullets}>
-              {successStory.bullets.map((bullet, i) => (
-                <li key={i}>{bullet}</li>
-              ))}
-            </ul>
+            {achievementExpanded && (
+              <>
+                <p className={styles.achievementDesc}>{successStory.description}</p>
+                <ul className={styles.achievementBullets}>
+                  {successStory.bullets.map((bullet, i) => (
+                    <li key={i}>{bullet}</li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         </div>
       </section>
