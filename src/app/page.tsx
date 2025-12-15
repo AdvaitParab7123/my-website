@@ -278,8 +278,8 @@ export default function Home() {
         <div className="container">
           <div className={styles.workHeader} data-anim>
             <div>
-              <div className={styles.label}>Featured Projects</div>
               <h2 className={styles.sectionTitle}>My Work</h2>
+              <div className={styles.label}>Featured Projects</div>
             </div>
           </div>
           <div className={styles.workGrid}>
