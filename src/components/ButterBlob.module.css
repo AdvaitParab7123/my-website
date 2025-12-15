@@ -1,0 +1,35 @@
+.blob {
+  position: absolute;
+  background: linear-gradient(
+    135deg,
+    #f5d547 0%,
+    #e8c535 25%,
+    #d4a84b 50%,
+    #c99a3d 75%,
+    #e8c535 100%
+  );
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  will-change: transform, border-radius;
+  z-index: 1;
+  filter: blur(0px);
+  box-shadow: 
+    0 0 80px rgba(232, 197, 53, 0.3),
+    inset 0 0 80px rgba(255, 255, 255, 0.1);
+}
+
+.blob::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 30%;
+  height: 20%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  filter: blur(10px);
+}
+

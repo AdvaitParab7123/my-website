@@ -1,0 +1,24 @@
+.container {
+  overflow: hidden;
+}
+
+.text {
+  display: inline-block;
+}
+
+.charWrapper {
+  display: inline-block;
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+.char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.word {
+  display: inline-block;
+  overflow: hidden;
+}
+

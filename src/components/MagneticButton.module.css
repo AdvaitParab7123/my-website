@@ -1,0 +1,44 @@
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 48px;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  overflow: hidden;
+  will-change: transform;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+.text {
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+}
+
+.primary {
+  background: var(--butter);
+  color: var(--bg);
+}
+
+.primary:hover {
+  background: #f5d547;
+}
+
+.secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--text);
+}
+
+.secondary:hover {
+  border-color: var(--butter);
+  color: var(--butter);
+}
+
