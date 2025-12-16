@@ -312,6 +312,19 @@ export default function Home() {
               ))}
             </div>
           </div>
+
+          {/* Creative Work */}
+          <div className={styles.creativeWork} data-anim>
+            <h3 className={styles.otherTitle}>Creative Work</h3>
+            <a href="/comic" className={styles.comicCard}>
+              <div className={styles.comicIcon}>📖</div>
+              <div className={styles.comicInfo}>
+                <h4>My Comic</h4>
+                <p>A 24-page comic with animated page-turn experience</p>
+              </div>
+              <span className={styles.comicArrow}>→</span>
+            </a>
+          </div>
         </div>
       </section>
 
