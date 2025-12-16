@@ -114,6 +114,7 @@ export default function Home() {
       description: 'Self-serve room booking system that eliminated admin dependency—book meeting rooms in seconds, not emails.',
       role: 'Product Vision • UX • Development',
       impact: 'Zero admin dependency • Instant bookings',
+      link: 'https://meeting-rooms.netcorecloud.com/',
       image: '/meeting rooms booking.png'
     },
   ];
