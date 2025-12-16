@@ -5,9 +5,9 @@ import styles from './page.module.css';
 
 const TOTAL_PAGES = 24;
 
-// Helper to format page number with leading zeros (0001, 0002, etc.)
+// Helper to format page number with the actual file naming convention
 const getPagePath = (pageNum: number) => {
-  return `/comic/${String(pageNum).padStart(4, '0')}.jpg`;
+  return `/Comic/Comic Final Version_page-${String(pageNum).padStart(4, '0')}.jpg`;
 };
 
 export default function ComicReader() {
