@@ -229,16 +229,16 @@ export default function Home() {
               </p>
               <div className={styles.stats}>
                 <div className={styles.stat}>
-                  <h3>10+</h3>
-                  <p>Stakeholder Discovery Sessions</p>
+                  <h3>5+</h3>
+                  <p>AI Product Creator & Manager</p>
                 </div>
                 <div className={styles.stat}>
-                  <h3>85</h3>
-                  <p>AI Agents League Teams</p>
+                  <h3>🎯</h3>
+                  <p>Master Problem Identifier & Solver</p>
                 </div>
                 <div className={styles.stat}>
-                  <h3>3–4×</h3>
-                  <p>Email Quality Improvement</p>
+                  <h3>⚡</h3>
+                  <p>Expert in Increasing Team Speed & Efficiency with AI</p>
                 </div>
               </div>
             </div>

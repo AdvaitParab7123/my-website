@@ -998,6 +998,13 @@
     font-size: 12px;
     letter-spacing: 1.5px;
     margin-bottom: 16px;
+    position: relative;
+    z-index: 15;
+  }
+
+  .heroContent {
+    position: relative;
+    z-index: 15;
   }
   
   .heroTitle {
@@ -1023,13 +1030,17 @@
     padding: 14px 24px;
   }
 
-  /* Blobs - Mobile (smaller and less prominent) */
+  /* Blobs - Mobile (smaller, less prominent, and behind content) */
+  .blobs {
+    z-index: 1;
+  }
+
   .blob1 {
     width: 180px;
     height: 180px;
     top: 2%;
     right: -15%;
-    opacity: 0.5;
+    opacity: 0.4;
   }
 
   .blob2 {
@@ -1037,7 +1048,7 @@
     height: 140px;
     bottom: 5%;
     left: -15%;
-    opacity: 0.4;
+    opacity: 0.3;
   }
 
   .blob3 {
