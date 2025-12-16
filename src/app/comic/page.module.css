@@ -1,63 +1,55 @@
-/* Comic Reader Styles */
+/* Comic Reader - Clean Book Style */
 
-.comicContainer {
+.container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+  background: #0a0a0a;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  user-select: none;
+  padding: 16px;
+  overflow: hidden;
 }
 
 .fullscreen {
-  padding: 10px;
+  padding: 8px;
   background: #000;
 }
 
 /* Header */
 .header {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0 20px;
+  padding-bottom: 12px;
 }
 
 .backBtn {
   color: var(--butter);
   font-size: 14px;
-  font-weight: 500;
   text-decoration: none;
-  transition: opacity 0.3s;
-}
-
-.backBtn:hover {
-  opacity: 0.7;
 }
 
 .title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--white);
 }
 
 .fullscreenBtn {
   background: none;
-  border: 1px solid var(--gray);
-  color: var(--white);
-  font-size: 18px;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+  border: 1px solid #333;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s;
+  font-size: 16px;
 }
 
 .fullscreenBtn:hover {
   border-color: var(--butter);
-  color: var(--butter);
 }
 
 /* Loading */
@@ -69,17 +61,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 16px;
   z-index: 100;
 }
 
-.loadingSpinner {
-  width: 50px;
-  height: 50px;
-  border: 3px solid var(--gray-dark);
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #222;
   border-top-color: var(--butter);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
@@ -87,47 +79,65 @@
 }
 
 .loading p {
-  color: var(--gray);
+  color: #666;
   font-size: 14px;
 }
 
-/* Book Wrapper */
-.bookWrapper {
-  flex: 1;
+/* Nudge - Floating hint above book */
+.nudge {
   display: flex;
   align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: rgba(232, 185, 49, 0.15);
+  border: 1px solid rgba(232, 185, 49, 0.3);
+  border-radius: 100px;
+  margin-bottom: 16px;
+  animation: nudgeFade 5s ease-in-out forwards;
+}
+
+@keyframes nudgeFade {
+  0%, 80% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+}
+
+.nudgeArrow {
+  font-size: 18px;
+  color: var(--butter);
+  animation: nudgeSlide 1s ease-in-out infinite alternate;
+}
+
+.nudgeArrow:first-child {
+  animation-direction: alternate-reverse;
+}
+
+@keyframes nudgeSlide {
+  from { transform: translateX(0); }
+  to { transform: translateX(5px); }
+}
+
+.nudgeText {
+  font-size: 13px;
+  color: var(--butter);
+  white-space: nowrap;
+}
+
+/* Book Area */
+.bookArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  position: relative;
   width: 100%;
   max-width: 1000px;
-  perspective: 2000px;
-  transition: opacity 0.5s;
+  perspective: 2500px;
+  cursor: grab;
+  user-select: none;
 }
 
-/* Shadow on the ground that moves with levitation */
-.bookWrapper::after {
-  content: '';
-  position: absolute;
-  bottom: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 30px;
-  background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
-  border-radius: 50%;
-  animation: shadowPulse 4s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes shadowPulse {
-  0%, 100% {
-    transform: translateX(-50%) scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateX(-50%) scale(0.85);
-    opacity: 0.3;
-  }
+.bookArea:active {
+  cursor: grabbing;
 }
 
 /* The Book */
@@ -135,197 +145,182 @@
   display: flex;
   position: relative;
   transform-style: preserve-3d;
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 100px rgba(0, 0, 0, 0.3);
-  border-radius: 4px 12px 12px 4px;
-  transition: transform 0.1s ease-out;
+  animation: float 4s ease-in-out infinite;
 }
 
-/* Levitating Animation */
-.levitating {
-  animation: levitate 4s ease-in-out infinite;
-}
-
-@keyframes levitate {
-  0%, 100% {
-    transform: translateY(0px) rotateX(0deg) rotateY(0deg);
-    box-shadow: 
-      0 20px 60px rgba(0, 0, 0, 0.5),
-      0 0 100px rgba(0, 0, 0, 0.3);
-  }
-  50% {
-    transform: translateY(-15px) rotateX(2deg) rotateY(-1deg);
-    box-shadow: 
-      0 35px 80px rgba(0, 0, 0, 0.4),
-      0 0 120px rgba(0, 0, 0, 0.2);
-  }
-}
-
-/* Pause levitation on hover for mouse tilt effect */
-.book:hover {
-  animation-play-state: paused;
-}
-
-/* Spine */
-.spine {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 30px;
-  transform: translateX(-50%);
-  background: linear-gradient(90deg, 
-    rgba(0,0,0,0.4) 0%, 
-    rgba(0,0,0,0.1) 30%, 
-    rgba(255,255,255,0.05) 50%, 
-    rgba(0,0,0,0.1) 70%, 
-    rgba(0,0,0,0.4) 100%
-  );
-  z-index: 10;
-  pointer-events: none;
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotateX(2deg); }
+  50% { transform: translateY(-12px) rotateX(0deg); }
 }
 
 /* Pages */
 .pageLeft,
 .pageRight {
-  width: 45vw;
-  max-width: 450px;
-  aspect-ratio: 2/3;
-  background: #1a1a1a;
+  width: 42vw;
+  max-width: 420px;
+  aspect-ratio: 0.7;
+  background: #111;
   overflow: hidden;
   position: relative;
 }
 
 .pageLeft {
   border-radius: 4px 0 0 4px;
-  box-shadow: inset -10px 0 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    inset -20px 0 40px rgba(0,0,0,0.4),
+    -5px 0 20px rgba(0,0,0,0.3);
 }
 
 .pageRight {
   border-radius: 0 4px 4px 0;
-  box-shadow: inset 10px 0 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    inset 20px 0 40px rgba(0,0,0,0.4),
+    5px 0 20px rgba(0,0,0,0.3);
 }
 
-.pageImage {
+.pageLeft img,
+.pageRight img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   pointer-events: none;
 }
 
-.coverBack {
+.emptyPage {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-  font-size: 60px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
 }
 
-/* Flipping Page Animation */
-.flippingPage {
+/* Spine */
+.spine {
+  width: 8px;
+  background: linear-gradient(90deg, 
+    #0a0a0a 0%, 
+    #1a1a1a 20%,
+    #2a2a2a 50%,
+    #1a1a1a 80%,
+    #0a0a0a 100%
+  );
+  box-shadow: 0 0 15px rgba(0,0,0,0.8);
+  z-index: 5;
+}
+
+/* Flip Animation - FAST */
+.flipOverlayNext,
+.flipOverlayPrev {
   position: absolute;
-  right: 0;
   top: 0;
-  width: 45vw;
-  max-width: 450px;
-  aspect-ratio: 2/3;
+  width: 42vw;
+  max-width: 420px;
+  aspect-ratio: 0.7;
   transform-style: preserve-3d;
+  z-index: 10;
+}
+
+.flipOverlayNext {
+  right: 0;
   transform-origin: left center;
-  z-index: 20;
+  animation: flipRight 0.4s ease-in-out forwards;
 }
 
-.flipNext {
-  animation: flipNext 0.6s ease-in-out forwards;
-}
-
-.flipPrev {
+.flipOverlayPrev {
   left: 0;
-  right: auto;
   transform-origin: right center;
-  animation: flipPrev 0.6s ease-in-out forwards;
+  animation: flipLeft 0.4s ease-in-out forwards;
 }
 
-.flipFront,
-.flipBack {
+.flipPageFront,
+.flipPageBack {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   backface-visibility: hidden;
   overflow: hidden;
+  background: #111;
+}
+
+.flipPageFront {
   border-radius: 0 4px 4px 0;
 }
 
-.flipFront {
-  background: #1a1a1a;
-}
-
-.flipBack {
-  background: #1a1a1a;
+.flipPageBack {
   transform: rotateY(180deg);
-}
-
-.flipPrev .flipFront {
   border-radius: 4px 0 0 4px;
 }
 
-.flipPrev .flipBack {
+.flipOverlayPrev .flipPageFront {
   border-radius: 4px 0 0 4px;
 }
 
-@keyframes flipNext {
-  0% {
+.flipOverlayPrev .flipPageBack {
+  border-radius: 0 4px 4px 0;
+}
+
+.flipPageFront img,
+.flipPageBack img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes flipRight {
+  0% { 
     transform: rotateY(0deg);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   }
-  50% {
-    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.5);
-  }
-  100% {
+  100% { 
     transform: rotateY(-180deg);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   }
 }
 
-@keyframes flipPrev {
-  0% {
+@keyframes flipLeft {
+  0% { 
     transform: rotateY(0deg);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   }
-  50% {
-    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
-  }
-  100% {
+  100% { 
     transform: rotateY(180deg);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   }
 }
 
-/* Navigation Buttons */
-.navBtn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 60px;
-  height: 60px;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--white);
-  font-size: 32px;
+/* Ground Shadow */
+.shadow {
+  width: 70%;
+  height: 20px;
+  margin-top: 30px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.5) 0%, transparent 70%);
   border-radius: 50%;
+  animation: shadowPulse 4s ease-in-out infinite;
+}
+
+@keyframes shadowPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(0.9); opacity: 0.3; }
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.navBtn {
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid #333;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s;
-  backdrop-filter: blur(10px);
-  z-index: 30;
+  transition: all 0.2s;
 }
 
 .navBtn:hover:not(:disabled) {
-  background: var(--butter);
-  color: var(--black);
   border-color: var(--butter);
-  transform: translateY(-50%) scale(1.1);
+  color: var(--butter);
 }
 
 .navBtn:disabled {
@@ -333,338 +328,122 @@
   cursor: not-allowed;
 }
 
-.navPrev {
-  left: -80px;
-}
-
-.navNext {
-  right: -80px;
-}
-
-/* Page Indicator */
-.pageIndicator {
-  margin-top: 30px;
+.pageInfo {
   text-align: center;
 }
 
-.pageIndicator span {
-  color: var(--gray);
-  font-size: 14px;
-}
-
-.progressBar {
-  width: 200px;
-  height: 4px;
-  background: var(--gray-dark);
-  border-radius: 2px;
-  margin-top: 10px;
-  overflow: hidden;
+.pageInfo span {
+  font-size: 13px;
+  color: #666;
 }
 
 .progress {
+  width: 120px;
+  height: 3px;
+  background: #222;
+  border-radius: 2px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.progressFill {
   height: 100%;
   background: var(--butter);
-  border-radius: 2px;
   transition: width 0.3s ease;
 }
 
-/* Controls Hint */
-.controls {
-  display: flex;
-  gap: 24px;
-  margin-top: 20px;
-  opacity: 0.5;
-}
-
-.controls span {
-  font-size: 12px;
-  color: var(--gray);
-}
-
-/* Dragging State */
-.dragging {
-  cursor: grabbing;
-}
-
-.bookWrapper {
-  cursor: grab;
-}
-
-/* Nudge Hint */
-.nudge {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-  z-index: 50;
-  cursor: pointer;
-  animation: nudgeFadeIn 0.5s ease-out;
-}
-
-@keyframes nudgeFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.nudgeContent {
-  text-align: center;
-  padding: 40px;
-  background: rgba(20, 20, 20, 0.9);
-  border: 1px solid var(--gray-dark);
-  border-radius: 20px;
-  animation: nudgePulse 2s ease-in-out infinite;
-}
-
-@keyframes nudgePulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.02);
-  }
-}
-
-.nudgeIcon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.nudgeHand {
-  font-size: 48px;
-  animation: nudgeSwipe 1.5s ease-in-out infinite;
-}
-
-@keyframes nudgeSwipe {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(20px);
-  }
-  75% {
-    transform: translateX(-20px);
-  }
-}
-
-.nudgeArrows {
-  font-size: 24px;
-  color: var(--butter);
-  letter-spacing: 8px;
-  animation: nudgeArrowPulse 1s ease-in-out infinite alternate;
-}
-
-@keyframes nudgeArrowPulse {
-  from {
-    opacity: 0.5;
-    letter-spacing: 8px;
-  }
-  to {
-    opacity: 1;
-    letter-spacing: 16px;
-  }
-}
-
-.nudgeText {
-  font-size: 18px;
-  color: var(--white);
-  margin-bottom: 12px;
-}
-
-.nudgeDesktop {
-  display: inline;
-}
-
-.nudgeMobile {
-  display: none;
-}
-
-.nudgeDismiss {
-  font-size: 12px;
-  color: var(--gray);
-  opacity: 0.7;
-}
-
-/* ===== RESPONSIVE - TABLET ===== */
-@media (max-width: 1024px) {
-  .navPrev {
-    left: -50px;
-  }
-  
-  .navNext {
-    right: -50px;
-  }
-  
-  .navBtn {
-    width: 50px;
-    height: 50px;
-    font-size: 28px;
-  }
-}
-
-/* ===== RESPONSIVE - MOBILE ===== */
+/* ==================== MOBILE ==================== */
 @media (max-width: 768px) {
-  .comicContainer {
-    padding: 15px;
+  .container {
+    padding: 12px;
   }
 
   .header {
-    padding: 5px 0 15px;
+    padding-bottom: 8px;
   }
 
   .title {
     font-size: 16px;
   }
 
-  .bookWrapper {
-    width: 100%;
-    perspective: 1500px;
+  .nudge {
+    padding: 8px 16px;
+    margin-bottom: 12px;
   }
 
+  .nudgeText {
+    font-size: 12px;
+  }
+
+  /* Single page view on mobile */
   .book {
     flex-direction: column;
-    border-radius: 8px;
-    /* Keep levitating on mobile but simpler */
-    animation: levitateMobile 3s ease-in-out infinite;
-  }
-
-  @keyframes levitateMobile {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  .bookWrapper::after {
-    bottom: -40px;
-    width: 70%;
-    height: 20px;
-  }
-
-  .spine {
-    display: none;
   }
 
   .pageLeft {
     display: none;
   }
 
+  .spine {
+    display: none;
+  }
+
   .pageRight {
     width: 90vw;
     max-width: none;
-    aspect-ratio: 2/3;
+    aspect-ratio: 0.7;
     border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
   }
 
-  .flippingPage {
+  .flipOverlayNext,
+  .flipOverlayPrev {
     width: 90vw;
     max-width: none;
+  }
+
+  .flipOverlayNext {
     transform-origin: center center;
+    animation: flipMobileNext 0.35s ease-out forwards;
   }
 
-  .flipNext {
-    animation: flipNextMobile 0.5s ease-in-out forwards;
+  .flipOverlayPrev {
+    transform-origin: center center;
+    animation: flipMobilePrev 0.35s ease-out forwards;
   }
 
-  .flipPrev {
-    animation: flipPrevMobile 0.5s ease-in-out forwards;
+  @keyframes flipMobileNext {
+    0% { transform: translateX(0) scale(1); opacity: 1; }
+    100% { transform: translateX(-100%) scale(0.95); opacity: 0; }
   }
 
-  @keyframes flipNextMobile {
-    0% {
-      transform: rotateY(0deg) scale(1);
-      opacity: 1;
-    }
-    100% {
-      transform: rotateY(-90deg) scale(0.9);
-      opacity: 0;
-    }
+  @keyframes flipMobilePrev {
+    0% { transform: translateX(0) scale(1); opacity: 1; }
+    100% { transform: translateX(100%) scale(0.95); opacity: 0; }
   }
 
-  @keyframes flipPrevMobile {
-    0% {
-      transform: rotateY(0deg) scale(1);
-      opacity: 1;
-    }
-    100% {
-      transform: rotateY(90deg) scale(0.9);
-      opacity: 0;
-    }
-  }
-
-  .flipFront,
-  .flipBack {
+  .flipPageFront,
+  .flipPageBack {
     border-radius: 8px;
+  }
+
+  .shadow {
+    margin-top: 20px;
+    width: 80%;
+  }
+
+  .nav {
+    gap: 16px;
+    margin-top: 16px;
   }
 
   .navBtn {
-    width: 44px;
-    height: 44px;
-    font-size: 24px;
-    background: rgba(0, 0, 0, 0.8);
+    padding: 8px 16px;
+    font-size: 13px;
   }
 
-  .navPrev {
-    left: 10px;
-  }
-
-  .navNext {
-    right: 10px;
-  }
-
-  .pageIndicator {
-    margin-top: 20px;
-  }
-
-  .progressBar {
-    width: 150px;
-  }
-
-  .controls {
-    display: none;
-  }
-
-  /* Nudge - Mobile */
-  .nudgeDesktop {
-    display: none;
-  }
-
-  .nudgeMobile {
-    display: inline;
-  }
-
-  .nudgeContent {
-    padding: 32px;
-    margin: 20px;
-  }
-
-  .nudgeHand {
-    font-size: 40px;
-  }
-
-  .nudgeText {
-    font-size: 16px;
-  }
-
-  .bookWrapper {
-    cursor: default;
-  }
-
-  .fullscreenBtn {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
+  .progress {
+    width: 80px;
   }
 }
 
@@ -674,22 +453,8 @@
     width: 95vw;
   }
 
-  .flippingPage {
+  .flipOverlayNext,
+  .flipOverlayPrev {
     width: 95vw;
   }
-
-  .navBtn {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-  }
-
-  .navPrev {
-    left: 5px;
-  }
-
-  .navNext {
-    right: 5px;
-  }
 }
-

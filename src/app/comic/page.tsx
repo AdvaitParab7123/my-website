@@ -11,21 +11,41 @@ const getPagePath = (pageNum: number) => {
 };
 
 export default function ComicReader() {
-  const [currentPage, setCurrentPage] = useState(0);
+  // Current spread index (0 = cover, 1 = pages 2-3, 2 = pages 4-5, etc.)
+  const [currentSpread, setCurrentSpread] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
   const [flipDirection, setFlipDirection] = useState<'next' | 'prev' | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [tiltX, setTiltX] = useState(0);
-  const [tiltY, setTiltY] = useState(0);
-  
-  // Mouse drag state for desktop swipe
-  const [mouseStart, setMouseStart] = useState<number | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  
-  // Nudge hint state
   const [showNudge, setShowNudge] = useState(true);
+  
+  // Touch/Mouse drag
+  const [dragStart, setDragStart] = useState<number | null>(null);
+
+  // Total spreads: cover (1) + middle spreads (11) + back cover (1) = 13 spreads
+  // Spread 0: Page 1 (front cover) - right side only
+  // Spread 1: Pages 2-3
+  // Spread 2: Pages 4-5
+  // ... 
+  // Spread 11: Pages 22-23
+  // Spread 12: Page 24 (back cover) - left side only
+  const TOTAL_SPREADS = 13;
+
+  // Get pages for current spread
+  const getSpreadPages = (spread: number): { left: number | null; right: number | null } => {
+    if (spread === 0) {
+      // Front cover - only right side
+      return { left: null, right: 1 };
+    } else if (spread === TOTAL_SPREADS - 1) {
+      // Back cover - only left side
+      return { left: 24, right: null };
+    } else {
+      // Regular spread
+      const leftPage = spread * 2;
+      const rightPage = spread * 2 + 1;
+      return { left: leftPage, right: rightPage };
+    }
+  };
 
   // Preload images
   useEffect(() => {
@@ -45,45 +65,41 @@ export default function ComicReader() {
     preloadImages();
   }, []);
 
-  // Mouse move for 3D tilt effect on desktop
+  // Auto-hide nudge after 5 seconds
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { innerWidth, innerHeight } = window;
-      const x = (e.clientX - innerWidth / 2) / (innerWidth / 2);
-      const y = (e.clientY - innerHeight / 2) / (innerHeight / 2);
-      setTiltX(y * 5); // Tilt based on mouse Y position
-      setTiltY(x * -5); // Tilt based on mouse X position
-    };
+    if (showNudge && isLoaded) {
+      const timer = setTimeout(() => setShowNudge(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showNudge, isLoaded]);
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  const goToPage = useCallback((direction: 'next' | 'prev') => {
+  const goToSpread = useCallback((direction: 'next' | 'prev') => {
     if (isFlipping) return;
     
-    if (direction === 'next' && currentPage >= TOTAL_PAGES - 1) return;
-    if (direction === 'prev' && currentPage <= 0) return;
+    if (direction === 'next' && currentSpread >= TOTAL_SPREADS - 1) return;
+    if (direction === 'prev' && currentSpread <= 0) return;
 
+    setShowNudge(false);
     setIsFlipping(true);
     setFlipDirection(direction);
 
+    // Fast animation - 400ms
     setTimeout(() => {
-      setCurrentPage(prev => direction === 'next' ? prev + 1 : prev - 1);
+      setCurrentSpread(prev => direction === 'next' ? prev + 1 : prev - 1);
       setIsFlipping(false);
       setFlipDirection(null);
-    }, 600);
-  }, [currentPage, isFlipping]);
+    }, 400);
+  }, [currentSpread, isFlipping]);
 
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight' || e.key === ' ') {
         e.preventDefault();
-        goToPage('next');
+        goToSpread('next');
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
-        goToPage('prev');
+        goToSpread('prev');
       } else if (e.key === 'Escape' && isFullscreen) {
         setIsFullscreen(false);
       } else if (e.key === 'f' || e.key === 'F') {
@@ -93,82 +109,39 @@ export default function ComicReader() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [goToPage, isFullscreen]);
+  }, [goToSpread, isFullscreen]);
 
-  // Touch handlers for swipe (mobile)
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.touches[0].clientX);
-    dismissNudge();
+  // Unified drag handler for both touch and mouse
+  const handleDragStart = (x: number) => {
+    setDragStart(x);
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStart === null) return;
+  const handleDragEnd = (x: number) => {
+    if (dragStart === null) return;
     
-    const touchEnd = e.changedTouches[0].clientX;
-    const diff = touchStart - touchEnd;
+    const diff = dragStart - x;
+    const threshold = 50;
 
-    if (Math.abs(diff) > 50) {
+    if (Math.abs(diff) > threshold) {
       if (diff > 0) {
-        goToPage('next');
+        goToSpread('next');
       } else {
-        goToPage('prev');
+        goToSpread('prev');
       }
     }
-    setTouchStart(null);
+    setDragStart(null);
   };
 
-  // Mouse handlers for click-and-drag swipe (desktop)
-  const handleMouseDown = (e: React.MouseEvent) => {
-    // Only left click
-    if (e.button !== 0) return;
-    setMouseStart(e.clientX);
-    setIsDragging(true);
-    dismissNudge();
+  // Touch handlers
+  const onTouchStart = (e: React.TouchEvent) => handleDragStart(e.touches[0].clientX);
+  const onTouchEnd = (e: React.TouchEvent) => handleDragEnd(e.changedTouches[0].clientX);
+
+  // Mouse handlers
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 0) handleDragStart(e.clientX);
   };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || mouseStart === null) return;
-    // Could add visual feedback here during drag
-  };
-
-  const handleMouseUp = (e: React.MouseEvent) => {
-    if (!isDragging || mouseStart === null) {
-      setIsDragging(false);
-      return;
-    }
-    
-    const mouseEnd = e.clientX;
-    const diff = mouseStart - mouseEnd;
-
-    if (Math.abs(diff) > 80) { // Slightly larger threshold for mouse
-      if (diff > 0) {
-        goToPage('next');
-      } else {
-        goToPage('prev');
-      }
-    }
-    
-    setMouseStart(null);
-    setIsDragging(false);
-  };
-
-  const handleMouseLeave = () => {
-    setMouseStart(null);
-    setIsDragging(false);
-  };
-
-  // Dismiss nudge hint
-  const dismissNudge = () => {
-    if (showNudge) setShowNudge(false);
-  };
-
-  // Auto-dismiss nudge after 5 seconds
-  useEffect(() => {
-    if (showNudge && isLoaded) {
-      const timer = setTimeout(() => setShowNudge(false), 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [showNudge, isLoaded]);
+  const onMouseUp = (e: React.MouseEvent) => handleDragEnd(e.clientX);
+  const onMouseLeave = () => setDragStart(null);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -180,166 +153,134 @@ export default function ComicReader() {
     }
   };
 
+  const currentPages = getSpreadPages(currentSpread);
+  const nextPages = getSpreadPages(currentSpread + 1);
+  const prevPages = getSpreadPages(currentSpread - 1);
+
   return (
-    <div className={`${styles.comicContainer} ${isFullscreen ? styles.fullscreen : ''}`}>
+    <div className={`${styles.container} ${isFullscreen ? styles.fullscreen : ''}`}>
       {/* Header */}
       <header className={styles.header}>
-        <a href="/" className={styles.backBtn}>
-          ← Back
-        </a>
+        <a href="/" className={styles.backBtn}>← Back</a>
         <h1 className={styles.title}>My Comic</h1>
         <button onClick={toggleFullscreen} className={styles.fullscreenBtn}>
-          {isFullscreen ? '⊠' : '⛶'}
+          {isFullscreen ? '✕' : '⛶'}
         </button>
       </header>
 
-      {/* Loading Screen */}
+      {/* Loading */}
       {!isLoaded && (
         <div className={styles.loading}>
-          <div className={styles.loadingSpinner}></div>
+          <div className={styles.spinner}></div>
           <p>Loading comic...</p>
         </div>
       )}
 
-      {/* Comic Book */}
+      {/* Nudge hint - floating above book */}
+      {showNudge && isLoaded && (
+        <div className={styles.nudge}>
+          <span className={styles.nudgeArrow}>←</span>
+          <span className={styles.nudgeText}>Swipe or drag to turn pages</span>
+          <span className={styles.nudgeArrow}>→</span>
+        </div>
+      )}
+
+      {/* Book */}
       <div 
-        className={`${styles.bookWrapper} ${isDragging ? styles.dragging : ''}`}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
+        className={styles.bookArea}
         style={{ opacity: isLoaded ? 1 : 0 }}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseLeave}
       >
-        <div 
-          className={`${styles.book} ${styles.levitating}`}
-          style={{
-            transform: `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`,
-          }}
-        >
-          {/* Book spine shadow */}
+        <div className={styles.book}>
+          {/* Left Page */}
+          <div className={styles.pageLeft}>
+            {currentPages.left ? (
+              <img src={getPagePath(currentPages.left)} alt={`Page ${currentPages.left}`} />
+            ) : (
+              <div className={styles.emptyPage}></div>
+            )}
+          </div>
+
+          {/* Spine */}
           <div className={styles.spine}></div>
 
-          {/* Left page (previous) */}
-          <div className={styles.pageLeft}>
-            {currentPage > 0 && (
-              <img 
-                src={getPagePath(currentPage)} 
-                alt={`Page ${currentPage}`}
-                className={styles.pageImage}
-              />
-            )}
-            {currentPage === 0 && (
-              <div className={styles.coverBack}>
-                <span>📖</span>
-              </div>
-            )}
-          </div>
-
-          {/* Right page (current) */}
+          {/* Right Page */}
           <div className={styles.pageRight}>
-            <img 
-              src={getPagePath(currentPage + 1)} 
-              alt={`Page ${currentPage + 1}`}
-              className={styles.pageImage}
-            />
+            {currentPages.right ? (
+              <img src={getPagePath(currentPages.right)} alt={`Page ${currentPages.right}`} />
+            ) : (
+              <div className={styles.emptyPage}></div>
+            )}
           </div>
 
-          {/* Flipping page overlay */}
+          {/* Flip animation overlay */}
           {isFlipping && flipDirection === 'next' && (
-            <div className={`${styles.flippingPage} ${styles.flipNext}`}>
-              <div className={styles.flipFront}>
-                <img 
-                  src={getPagePath(currentPage + 1)} 
-                  alt={`Page ${currentPage + 1}`}
-                  className={styles.pageImage}
-                />
+            <div className={styles.flipOverlayNext}>
+              <div className={styles.flipPageFront}>
+                {currentPages.right && (
+                  <img src={getPagePath(currentPages.right)} alt="Flipping" />
+                )}
               </div>
-              <div className={styles.flipBack}>
-                <img 
-                  src={getPagePath(currentPage + 2)} 
-                  alt={`Page ${currentPage + 2}`}
-                  className={styles.pageImage}
-                />
+              <div className={styles.flipPageBack}>
+                {nextPages.left && (
+                  <img src={getPagePath(nextPages.left)} alt="Next" />
+                )}
               </div>
             </div>
           )}
 
           {isFlipping && flipDirection === 'prev' && (
-            <div className={`${styles.flippingPage} ${styles.flipPrev}`}>
-              <div className={styles.flipFront}>
-                <img 
-                  src={getPagePath(currentPage)} 
-                  alt={`Page ${currentPage}`}
-                  className={styles.pageImage}
-                />
+            <div className={styles.flipOverlayPrev}>
+              <div className={styles.flipPageFront}>
+                {currentPages.left && (
+                  <img src={getPagePath(currentPages.left)} alt="Flipping" />
+                )}
               </div>
-              <div className={styles.flipBack}>
-                <img 
-                  src={getPagePath(currentPage + 1)} 
-                  alt={`Page ${currentPage + 1}`}
-                  className={styles.pageImage}
-                />
+              <div className={styles.flipPageBack}>
+                {prevPages.right && (
+                  <img src={getPagePath(prevPages.right)} alt="Prev" />
+                )}
               </div>
             </div>
           )}
         </div>
 
-        {/* Navigation arrows */}
-        <button 
-          className={`${styles.navBtn} ${styles.navPrev}`}
-          onClick={() => { goToPage('prev'); dismissNudge(); }}
-          disabled={currentPage <= 0 || isFlipping}
-          aria-label="Previous page"
-        >
-          ‹
-        </button>
-        <button 
-          className={`${styles.navBtn} ${styles.navNext}`}
-          onClick={() => { goToPage('next'); dismissNudge(); }}
-          disabled={currentPage >= TOTAL_PAGES - 1 || isFlipping}
-          aria-label="Next page"
-        >
-          ›
-        </button>
+        {/* Ground shadow */}
+        <div className={styles.shadow}></div>
+      </div>
 
-        {/* Nudge hint */}
-        {showNudge && isLoaded && (
-          <div className={styles.nudge} onClick={dismissNudge}>
-            <div className={styles.nudgeContent}>
-              <div className={styles.nudgeIcon}>
-                <span className={styles.nudgeHand}>👆</span>
-                <span className={styles.nudgeArrows}>← →</span>
-              </div>
-              <p className={styles.nudgeText}>
-                <span className={styles.nudgeDesktop}>Click & drag or use arrow keys</span>
-                <span className={styles.nudgeMobile}>Swipe to turn pages</span>
-              </p>
-              <span className={styles.nudgeDismiss}>Tap to dismiss</span>
-            </div>
+      {/* Navigation */}
+      <div className={styles.nav}>
+        <button 
+          onClick={() => goToSpread('prev')}
+          disabled={currentSpread <= 0 || isFlipping}
+          className={styles.navBtn}
+        >
+          ‹ Prev
+        </button>
+        
+        <div className={styles.pageInfo}>
+          <span>{currentSpread + 1} / {TOTAL_SPREADS}</span>
+          <div className={styles.progress}>
+            <div 
+              className={styles.progressFill}
+              style={{ width: `${((currentSpread + 1) / TOTAL_SPREADS) * 100}%` }}
+            ></div>
           </div>
-        )}
-      </div>
-
-      {/* Page indicator */}
-      <div className={styles.pageIndicator}>
-        <span>Page {currentPage + 1} of {TOTAL_PAGES}</span>
-        <div className={styles.progressBar}>
-          <div 
-            className={styles.progress} 
-            style={{ width: `${((currentPage + 1) / TOTAL_PAGES) * 100}%` }}
-          ></div>
         </div>
-      </div>
 
-      {/* Controls hint */}
-      <div className={styles.controls}>
-        <span>← → Arrow keys</span>
-        <span>Swipe on mobile</span>
-        <span>F for fullscreen</span>
+        <button 
+          onClick={() => goToSpread('next')}
+          disabled={currentSpread >= TOTAL_SPREADS - 1 || isFlipping}
+          className={styles.navBtn}
+        >
+          Next ›
+        </button>
       </div>
     </div>
   );
 }
-
