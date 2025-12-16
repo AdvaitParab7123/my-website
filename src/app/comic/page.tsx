@@ -82,13 +82,6 @@ export default function ComicReader() {
     setShowNudge(false);
     setIsFlipping(true);
     setFlipDirection(direction);
-
-    // Fast animation - 400ms
-    setTimeout(() => {
-      setCurrentSpread(prev => direction === 'next' ? prev + 1 : prev - 1);
-      setIsFlipping(false);
-      setFlipDirection(null);
-    }, 400);
   }, [currentSpread, isFlipping]);
 
   // Keyboard navigation
@@ -198,7 +191,10 @@ export default function ComicReader() {
         <div className={styles.book}>
           {/* Left Page */}
           <div className={styles.pageLeft}>
-            {currentPages.left ? (
+            {/* During next flip, we still show current left. During prev flip, we show PREVIOUS left being revealed */}
+            {isFlipping && flipDirection === 'prev' && prevPages.left ? (
+              <img src={getPagePath(prevPages.left)} alt={`Page ${prevPages.left}`} />
+            ) : currentPages.left ? (
               <img src={getPagePath(currentPages.left)} alt={`Page ${currentPages.left}`} />
             ) : (
               <div className={styles.emptyPage}></div>
@@ -210,7 +206,10 @@ export default function ComicReader() {
 
           {/* Right Page */}
           <div className={styles.pageRight}>
-            {currentPages.right ? (
+            {/* During next flip, we show NEXT right being revealed. During prev flip, we show current right */}
+            {isFlipping && flipDirection === 'next' && nextPages.right ? (
+              <img src={getPagePath(nextPages.right)} alt={`Page ${nextPages.right}`} />
+            ) : currentPages.right ? (
               <img src={getPagePath(currentPages.right)} alt={`Page ${currentPages.right}`} />
             ) : (
               <div className={styles.emptyPage}></div>
@@ -219,7 +218,11 @@ export default function ComicReader() {
 
           {/* Flip animation overlay */}
           {isFlipping && flipDirection === 'next' && (
-            <div className={styles.flipOverlayNext}>
+            <div className={styles.flipOverlayNext} onAnimationEnd={() => {
+              setCurrentSpread(prev => prev + 1);
+              setIsFlipping(false);
+              setFlipDirection(null);
+            }}>
               <div className={styles.flipPageFront}>
                 {currentPages.right && (
                   <img src={getPagePath(currentPages.right)} alt="Flipping" />
@@ -234,7 +237,11 @@ export default function ComicReader() {
           )}
 
           {isFlipping && flipDirection === 'prev' && (
-            <div className={styles.flipOverlayPrev}>
+            <div className={styles.flipOverlayPrev} onAnimationEnd={() => {
+              setCurrentSpread(prev => prev - 1);
+              setIsFlipping(false);
+              setFlipDirection(null);
+            }}>
               <div className={styles.flipPageFront}>
                 {currentPages.left && (
                   <img src={getPagePath(currentPages.left)} alt="Flipping" />
