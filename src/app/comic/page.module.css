@@ -381,6 +381,119 @@
   color: var(--gray);
 }
 
+/* Dragging State */
+.dragging {
+  cursor: grabbing;
+}
+
+.bookWrapper {
+  cursor: grab;
+}
+
+/* Nudge Hint */
+.nudge {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  cursor: pointer;
+  animation: nudgeFadeIn 0.5s ease-out;
+}
+
+@keyframes nudgeFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.nudgeContent {
+  text-align: center;
+  padding: 40px;
+  background: rgba(20, 20, 20, 0.9);
+  border: 1px solid var(--gray-dark);
+  border-radius: 20px;
+  animation: nudgePulse 2s ease-in-out infinite;
+}
+
+@keyframes nudgePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.nudgeIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.nudgeHand {
+  font-size: 48px;
+  animation: nudgeSwipe 1.5s ease-in-out infinite;
+}
+
+@keyframes nudgeSwipe {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(20px);
+  }
+  75% {
+    transform: translateX(-20px);
+  }
+}
+
+.nudgeArrows {
+  font-size: 24px;
+  color: var(--butter);
+  letter-spacing: 8px;
+  animation: nudgeArrowPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes nudgeArrowPulse {
+  from {
+    opacity: 0.5;
+    letter-spacing: 8px;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 16px;
+  }
+}
+
+.nudgeText {
+  font-size: 18px;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+
+.nudgeDesktop {
+  display: inline;
+}
+
+.nudgeMobile {
+  display: none;
+}
+
+.nudgeDismiss {
+  font-size: 12px;
+  color: var(--gray);
+  opacity: 0.7;
+}
+
 /* ===== RESPONSIVE - TABLET ===== */
 @media (max-width: 1024px) {
   .navPrev {
@@ -520,6 +633,32 @@
 
   .controls {
     display: none;
+  }
+
+  /* Nudge - Mobile */
+  .nudgeDesktop {
+    display: none;
+  }
+
+  .nudgeMobile {
+    display: inline;
+  }
+
+  .nudgeContent {
+    padding: 32px;
+    margin: 20px;
+  }
+
+  .nudgeHand {
+    font-size: 40px;
+  }
+
+  .nudgeText {
+    font-size: 16px;
+  }
+
+  .bookWrapper {
+    cursor: default;
   }
 
   .fullscreenBtn {

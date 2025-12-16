@@ -19,6 +19,13 @@ export default function ComicReader() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [tiltX, setTiltX] = useState(0);
   const [tiltY, setTiltY] = useState(0);
+  
+  // Mouse drag state for desktop swipe
+  const [mouseStart, setMouseStart] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // Nudge hint state
+  const [showNudge, setShowNudge] = useState(true);
 
   // Preload images
   useEffect(() => {
@@ -88,9 +95,10 @@ export default function ComicReader() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [goToPage, isFullscreen]);
 
-  // Touch handlers for swipe
+  // Touch handlers for swipe (mobile)
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.touches[0].clientX);
+    dismissNudge();
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
@@ -108,6 +116,59 @@ export default function ComicReader() {
     }
     setTouchStart(null);
   };
+
+  // Mouse handlers for click-and-drag swipe (desktop)
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Only left click
+    if (e.button !== 0) return;
+    setMouseStart(e.clientX);
+    setIsDragging(true);
+    dismissNudge();
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || mouseStart === null) return;
+    // Could add visual feedback here during drag
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (!isDragging || mouseStart === null) {
+      setIsDragging(false);
+      return;
+    }
+    
+    const mouseEnd = e.clientX;
+    const diff = mouseStart - mouseEnd;
+
+    if (Math.abs(diff) > 80) { // Slightly larger threshold for mouse
+      if (diff > 0) {
+        goToPage('next');
+      } else {
+        goToPage('prev');
+      }
+    }
+    
+    setMouseStart(null);
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setMouseStart(null);
+    setIsDragging(false);
+  };
+
+  // Dismiss nudge hint
+  const dismissNudge = () => {
+    if (showNudge) setShowNudge(false);
+  };
+
+  // Auto-dismiss nudge after 5 seconds
+  useEffect(() => {
+    if (showNudge && isLoaded) {
+      const timer = setTimeout(() => setShowNudge(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showNudge, isLoaded]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -142,9 +203,13 @@ export default function ComicReader() {
 
       {/* Comic Book */}
       <div 
-        className={styles.bookWrapper}
+        className={`${styles.bookWrapper} ${isDragging ? styles.dragging : ''}`}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
         style={{ opacity: isLoaded ? 1 : 0 }}
       >
         <div 
@@ -224,7 +289,7 @@ export default function ComicReader() {
         {/* Navigation arrows */}
         <button 
           className={`${styles.navBtn} ${styles.navPrev}`}
-          onClick={() => goToPage('prev')}
+          onClick={() => { goToPage('prev'); dismissNudge(); }}
           disabled={currentPage <= 0 || isFlipping}
           aria-label="Previous page"
         >
@@ -232,12 +297,29 @@ export default function ComicReader() {
         </button>
         <button 
           className={`${styles.navBtn} ${styles.navNext}`}
-          onClick={() => goToPage('next')}
+          onClick={() => { goToPage('next'); dismissNudge(); }}
           disabled={currentPage >= TOTAL_PAGES - 1 || isFlipping}
           aria-label="Next page"
         >
           ›
         </button>
+
+        {/* Nudge hint */}
+        {showNudge && isLoaded && (
+          <div className={styles.nudge} onClick={dismissNudge}>
+            <div className={styles.nudgeContent}>
+              <div className={styles.nudgeIcon}>
+                <span className={styles.nudgeHand}>👆</span>
+                <span className={styles.nudgeArrows}>← →</span>
+              </div>
+              <p className={styles.nudgeText}>
+                <span className={styles.nudgeDesktop}>Click & drag or use arrow keys</span>
+                <span className={styles.nudgeMobile}>Swipe to turn pages</span>
+              </p>
+              <span className={styles.nudgeDismiss}>Tap to dismiss</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Page indicator */}
