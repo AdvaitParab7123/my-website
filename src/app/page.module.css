@@ -334,21 +334,24 @@
 }
 
 .stat {
-  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.stat h3 {
-  font-size: 24px;
-  font-weight: 500;
+.statNumber {
+  font-size: 32px;
+  font-weight: 600;
   color: var(--butter);
-  margin-bottom: 8px;
-  line-height: 1.3;
+  min-width: 48px;
+  text-align: center;
 }
 
-.stat p {
-  font-size: 16px;
+.statLabel {
+  font-size: 14px;
   color: var(--white);
-  opacity: 0.8;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 .aboutVisual {
@@ -1128,12 +1131,17 @@
     padding-top: 32px;
   }
 
-  .stat h3 {
-    font-size: 32px;
+  .stat {
+    gap: 12px;
   }
 
-  .stat p {
-    font-size: 12px;
+  .statNumber {
+    font-size: 28px;
+    min-width: 40px;
+  }
+
+  .statLabel {
+    font-size: 13px;
   }
 
   /* Services - Mobile */

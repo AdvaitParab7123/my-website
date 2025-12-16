@@ -115,7 +115,7 @@ export default function Home() {
       role: 'Product Vision • UX • Development',
       impact: 'Zero admin dependency • Instant bookings',
       link: 'https://meeting-rooms.netcorecloud.com/',
-      image: '/meeting rooms booking.png'
+      image: '/meeting%20rooms%20booking.png'
     },
   ];
 
@@ -238,14 +238,16 @@ export default function Home() {
               </p>
               <div className={styles.stats}>
                 <div className={styles.stat}>
-                  <h3>AI Product Creator & Manager</h3>
-                  <p>5+ Products Created</p>
+                  <span className={styles.statNumber}>5+</span>
+                  <span className={styles.statLabel}>AI Products Shipped</span>
                 </div>
                 <div className={styles.stat}>
-                  <h3>Master Problem Identifier & Solver</h3>
+                  <span className={styles.statNumber}>↑</span>
+                  <span className={styles.statLabel}>Problem → Solution</span>
                 </div>
                 <div className={styles.stat}>
-                  <h3>Expert in Increasing Team Speed & Efficiency with AI</h3>
+                  <span className={styles.statNumber}>⚡</span>
+                  <span className={styles.statLabel}>Team Speed with AI</span>
                 </div>
               </div>
             </div>
