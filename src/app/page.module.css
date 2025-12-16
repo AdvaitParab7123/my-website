@@ -335,23 +335,21 @@
 
 .stat {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  align-items: baseline;
+  gap: 12px;
 }
 
 .statNumber {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 600;
   color: var(--butter);
-  min-width: 48px;
-  text-align: center;
 }
 
 .statLabel {
-  font-size: 14px;
-  color: var(--white);
+  font-size: 16px;
+  color: var(--butter);
   font-weight: 500;
-  letter-spacing: 0.02em;
+  line-height: 1.4;
 }
 
 .aboutVisual {
@@ -1132,16 +1130,15 @@
   }
 
   .stat {
-    gap: 12px;
+    gap: 10px;
   }
 
   .statNumber {
     font-size: 28px;
-    min-width: 40px;
   }
 
   .statLabel {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   /* Services - Mobile */

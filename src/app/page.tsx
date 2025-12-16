@@ -239,15 +239,13 @@ export default function Home() {
               <div className={styles.stats}>
                 <div className={styles.stat}>
                   <span className={styles.statNumber}>5+</span>
-                  <span className={styles.statLabel}>AI Products Shipped</span>
+                  <span className={styles.statLabel}>AI Products Built & Shipped</span>
                 </div>
                 <div className={styles.stat}>
-                  <span className={styles.statNumber}>↑</span>
-                  <span className={styles.statLabel}>Problem → Solution</span>
+                  <span className={styles.statLabel}>I find problems, then I solve them</span>
                 </div>
                 <div className={styles.stat}>
-                  <span className={styles.statNumber}>⚡</span>
-                  <span className={styles.statLabel}>Team Speed with AI</span>
+                  <span className={styles.statLabel}>I make teams faster & more efficient using AI</span>
                 </div>
               </div>
             </div>
