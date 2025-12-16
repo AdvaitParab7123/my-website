@@ -108,6 +108,14 @@ export default function Home() {
       link: 'https://the-email-guy.vercel.app/chat',
       image: '/email-guy.png'
     },
+    { 
+      title: 'Meeting Rooms Booking Platform', 
+      category: 'Live • Internal',
+      description: 'Self-serve room booking system that eliminated admin dependency—book meeting rooms in seconds, not emails.',
+      role: 'Product Vision • UX • Development',
+      impact: 'Zero admin dependency • Instant bookings',
+      image: '/meeting rooms booking.png'
+    },
   ];
 
   // Other Projects
@@ -229,16 +237,14 @@ export default function Home() {
               </p>
               <div className={styles.stats}>
                 <div className={styles.stat}>
-                  <h3>5+</h3>
-                  <p>AI Product Creator & Manager</p>
+                  <h3>AI Product Creator & Manager</h3>
+                  <p>5+ Products Created</p>
                 </div>
                 <div className={styles.stat}>
-                  <h3>🎯</h3>
-                  <p>Master Problem Identifier & Solver</p>
+                  <h3>Master Problem Identifier & Solver</h3>
                 </div>
                 <div className={styles.stat}>
-                  <h3>⚡</h3>
-                  <p>Expert in Increasing Team Speed & Efficiency with AI</p>
+                  <h3>Expert in Increasing Team Speed & Efficiency with AI</h3>
                 </div>
               </div>
             </div>
@@ -315,12 +321,15 @@ export default function Home() {
 
           {/* Creative Work */}
           <div className={styles.creativeWork} data-anim>
-            <h3 className={styles.otherTitle}>Creative Work</h3>
+            <div className={styles.creativeIntro}>
+              <p className={styles.creativeHook}>You think that's all there is to me?</p>
+              <h3 className={styles.creativeTitle}>I'm also <span>Creative.</span></h3>
+            </div>
             <a href="/comic" className={styles.comicCard}>
               <div className={styles.comicIcon}>📖</div>
               <div className={styles.comicInfo}>
-                <h4>My Comic</h4>
-                <p>A 24-page comic with animated page-turn experience</p>
+                <h4>A Life Story Turned Comic</h4>
+                <p>A personal story from my life, transformed into a 24-page visual journey</p>
               </div>
               <span className={styles.comicArrow}>→</span>
             </a>
